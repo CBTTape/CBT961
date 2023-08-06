@@ -1,0 +1,36 @@
+2023-08-06 08:43:09.533542 - Initialized conversion of CBT961
+2023-08-06 08:43:09.864893 - Received CBT.V505.FILE961.PDS from FILE961.XMI 
+2023-08-06 08:43:09.867027 - Found $$$#DATE.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/$$$#DATE
+2023-08-06 08:43:09.867997 - Found $$$CHNG.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/$$$CHNG
+2023-08-06 08:43:09.869004 - Found $$$DOC.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/$$$DOC
+2023-08-06 08:43:09.869919 - Found $$$HELP.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/$$$HELP
+2023-08-06 08:43:09.870801 - Found $$$HELPS.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/$$$HELPS
+2023-08-06 08:43:09.871643 - Found $$$INST.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/$$$INST
+2023-08-06 08:43:09.872492 - Found @FILE961.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/@FILE961
+2023-08-06 08:43:09.873337 - Found LMACING.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/LMACING
+2023-08-06 08:43:09.874180 - Found LMACISPF.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/LMACISPF
+2023-08-06 08:43:09.874989 - Found LMACJES2.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/LMACJES2
+2023-08-06 08:43:09.875778 - Found LMACJES3.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/LMACJES3
+2023-08-06 08:43:09.876584 - Found LMACMVS.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/LMACMVS
+2023-08-06 08:43:09.877433 - Found LMACTSO.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/LMACTSO
+2023-08-06 08:43:09.878260 - Found LMACUSS.txt (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/LMACUSS
+2023-08-06 08:43:09.879052 - Found Y$CL.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/Y$CL
+2023-08-06 08:43:09.879839 - Found Y$HC.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/Y$HC
+2023-08-06 08:43:09.880662 - Found Y$JI.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/Y$JI
+2023-08-06 08:43:09.881629 - Found Y$PDS.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/Y$PDS
+2023-08-06 08:43:09.882675 - Found Y$PG.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/Y$PG
+2023-08-06 08:43:09.883620 - Found Y$PROCJ.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/Y$PROCJ
+2023-08-06 08:43:09.884465 - Found Y$REV.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/Y$REV
+2023-08-06 08:43:09.885393 - Found Y$RU.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/Y$RU
+2023-08-06 08:43:09.886401 - Found YCINGCUS.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/YCINGCUS
+2023-08-06 08:43:09.887350 - Found YCLMACDS.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/YCLMACDS
+2023-08-06 08:43:09.888373 - Found YCLMACHG.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/YCLMACHG
+2023-08-06 08:43:09.889283 - Found YCLMACLM.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/YCLMACLM
+2023-08-06 08:43:09.890207 - Found YCLMACNS.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/YCLMACNS
+2023-08-06 08:43:09.891149 - Found YCLMACRX.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/YCLMACRX
+2023-08-06 08:43:09.891966 - Found YCLMACT.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/YCLMACT
+2023-08-06 08:43:09.891976 - Found YCLMACTB.bin containing application/octet-stream, moved to PDS/YCLMACTB
+2023-08-06 08:43:09.893777 - Found YCLMAHLP.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/YCLMAHLP
+2023-08-06 08:43:09.894675 - Found YCLMAHLU.rexx (text/plain) in CBT.V505.FILE961.PDS, moved to PDS/YCLMAHLU
+2023-08-06 08:43:09.895480 - Found YLM01.rexx (text/x-diff) in CBT.V505.FILE961.PDS, moved to PDS/YLM01
+2023-08-06 08:43:09.896284 - Found YLM02.rexx (text/x-diff) in CBT.V505.FILE961.PDS, moved to PDS/YLM02

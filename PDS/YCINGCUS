@@ -1,0 +1,7 @@
+/* Rexx YCINGCUS */
+/* User customized System Automation Call              */
+/* Define the name of the dataset containing the Rexx: */
+/*        AOFRYCMD                                     */
+/* Default is: SYS1.ING.SINGTREX                       */
+push "MY.DATA.SET"
+exit 0

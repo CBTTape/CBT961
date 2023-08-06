@@ -1,0 +1,31 @@
+/* Rexx by YCOS Yves Colliard Software - www.ycos.de                  */
+/*+------------------------------------------------------------------+*/
+/*| YCLMACRX     (c)  YCOS Yves Colliard Software                    |*/
+/*|                   2004-21                                        |*/
+/*|                   Mail yves.colliard§ycos.de                     |*/
+/*|                   Use at your own RISK|                          |*/
+/*|                                                                  |*/
+/*| Function Y$PROCJ: Used in some line commands to find PROCLIBs    |*/
+/*|                   for batch jobs                                 |*/
+/*|                                                                  |*/
+/*| Author:           Yves Colliard                                  |*/
+/*+------------------------------------------------------------------+*/
+/*|                                                                  |*/
+/*| MUST BE CUSTOMIZED BY THE USER|                                  |*/
+/*|                                                                  |*/
+/*| QUEUE all the procedure dataset names                            |*/
+/*|                                                                  |*/
+/*| Review your proclibs in JES2 and MVS                             |*/
+/*|                                                                  |*/
+/*+------------------------------------------------------------------+*/
+/*| VERS 2.23  21.12.2021 Yves Colliard                              |*/
+/*+------------------------------------------------------------------+*/
+
+/* insert the proc datasets */
+queue  "PROCLIB.FOR.ME"
+queue  "PROCLIB.FOR.YOU"
+/* Comment Start
+...    put as much as needed|
+   Comment End */
+
+return 0

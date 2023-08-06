@@ -1,0 +1,50 @@
+Summary of changes:
+-------------------
+
+2.23 support of JCL statements
+//    JCLLIB
+//    INCLUDE
+//    EXEC (PROC=)procedure
+     on INCLUDE and EXEC following commands will be supported
+JI - JCL Include - NEW
+     will show the member (INCUDE or PROC) as note within the JCL
+all dataset commands: V, VZ, E, EZ, DI... will also be supported
+
+JCLLIB and Proclib will be searched.
+Proclibs have to be defined within REXX Y$PROCJ
+  CUSTOMIZATION REQUIRED|
+
+000001 //
+000002 // JCLLIB    ORDER=YCOS01.YCOS.CNTL
+000003 //*
+000004 //* comment
+000005 //*
+JI 006 // INCLUDE MEMBER=IEFBR14
+000007 //*
+000008 // EXEC    YCOPRLOG
+
+or
+
+000001 //
+000002 // JCLLIB    ORDER=YCOS01.YCOS.CNTL
+000003 //*
+000004 //* comment
+000005 //*
+000006 // INCLUDE MEMBER=IEFBR14
+000007 //*
+V00008 // EXEC    YCOPRLOG
+
+--------------------------------------------------------------------------------
+
+2.23 support of Login on EX UNIX commands
+New parameters supported to use the login shell command
+
+000001 * unix cmd
+ex 002 unixl ls -l /
+000003
+
+or
+
+000001 * unix cmd
+ex 002 unixsul ls -l /
+000003
