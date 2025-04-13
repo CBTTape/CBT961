@@ -1,0 +1,132 @@
+//* YCOSDESC: LMAC
+//* LINE COMMANDS FOR IDCAMS CALL
+* IDCAMS Commands 11.11.2020
+* Samples for the EX line command from YCLMACRX
+* all commands can also be called from outside EDIT/VIEW:
+* TSO YCLMACRX tso listc ent(ycos.jcl) all
+* This way could also be used in a Rexx Batch|
+/*+------------------------------------------------------------------+*/
+/*| YCLMACRX     (c)  YCOS Yves Colliard Software                    |*/
+/*|                   2004-20                                        |*/
+/*|                   Mail yves.colliard§ycos.de                     |*/
+/*|                   Use at your own RISK|                          |*/
+/*+------------------------------------------------------------------+*/
+
+* help IDCAMS commands
+ HELP DEFINE
+ HELP ALTER
+ HELP PRINT
+ HELP LISTCAT
+ HELP REPRO
+ HELP EXPORT
+ HELP IMPORT
+ HELP DELETE
+ HELP ALLOC
+
+===================================================================
+
+* delete KSDS or other Cluster
+ DELETE 'YCOS01.NEW.KSDS' CLUSTER
+
+===================================================================
+
+* define KSDS
+ DEFINE CLUSTER(NAME('YCOS01.NEW.KSDS')    +
+          INDEXED                          +
+               )                           +
+        INDEX(                             +
+          RECORDS(100  , 200)              +
+             )                             +
+        DATA(                              +
+          RECORDS(1000    ,2000)           +
+          KEYS(20,0)                       +
+          RECORDSIZE(80 80)                +
+            )
+
+===================================================================
+
+* repro KSDS - prealloc files
+ REPRO INFILE(INPUT) OUTFILE(OUTPUT)
+* repro KSDS
+ REPRO INDATASET('YCOS01.KSDS.INPUT') OUTDATASET('YCOS01.NEW.KSDS')
+
+===================================================================
+
+* print KSDS - prealloc files
+ PRINT INFILE(INPUT) FROMKEY(11111111111111111115) +
+                       TOKEY(11111111111111111116)
+* print KSDS
+ PRINT INDATASET('YCOS01.NEW.KSDS')                  +
+                       FROMKEY(11111111111111111115) +
+                       TOKEY(11111111111111111116)
+
+===================================================================
+
+* listcat
+ LISTCAT ENT('YCOS01.NEW.KSDS') ALL
+ LISTCAT LVL('YCOS01.NEW') CLUSTER DATA INDEX NAME
+
+===================================================================
+
+* define ESDS
+DEFINE CLUSTER(NAME('YCOS01.NEW.ESDS') +
+            NONINDEXED)                +
+       DATA(                           +
+            RECORDS(1000    ,2000)     +
+            RECORDSIZE(80 80))
+
+* Print ESDS
+PRINT INDATASET('YCOS01.NEW.ESDS') +
+                    SKIP(2)        +
+                    COUNT(3)
+
+===================================================================
+
+* define RRDS - fixed
+DEFINE CLUSTER(NAME('YCOS01.NEW.RRDS')  +
+               NUMBERED)                +
+       DATA(                            +
+               RECORDS(1000    ,2000)   +
+               RECORDSIZE(80 80))
+
+* print RRDS
+PRINT INFILE(INPUT) FROMNUMBER(3) +
+                      TONUMBER(4)
+
+===================================================================
+
+* define LDS
+DEFINE CLUSTER(NAME('YCOS01.NEW.LDS') LINEAR) +
+    DATA(RECORDS(1000  ,1000) )
+
+* print LDS
+PRINT INDATASET('YCOS01.NEW.LDS')    +
+      CHAR FROMADDRESS(28672) TOADDRESS(40960)
+
+===================================================================
+
+* define LDS before formating as zFS
+DEFINE CLUSTER (NAME('YCOS01.NEW.ZFS1') +
+       LINEAR                           +
+       CYL(2 2)                         +
+       SHAREOPTIONS(3))
+
+* format the LDS as zFS
+unixsu zfsadm format -aggregate YCOS01.NEW.ZFS1
+
+* define a zFS
+DEFINE CLUSTER(NAME('YCOS01.NEW.ZFS2') ZFS +
+       CYLINDER(5 , 3)
+
+===================================================================
+
+* print master catalog or ICF catalog
+print indataset('MCAT.ZOSCAT') char
+print indataset('UCAT.ZOSCAT') char
+* listcat master catalog or ICF catalog
+listcat ent('MCAT.ZOSCAT') cat('MCAT.ZOSCAT') all
+listcat ent('UCAT.ZOSCAT') cat('UCAT.ZOSCAT') all
+
+* list alias pointing to ucat
+listcat ent('UCAT.ZOSCAT') cat('MCAT.ZOSCAT') all
+

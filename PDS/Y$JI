@@ -1,0 +1,261 @@
+/* Rexx by YCOS Yves Colliard Software - www.ycos.de                  */
+/*+------------------------------------------------------------------+*/
+/*| YCLMACRX     (c)  YCOS Yves Colliard Software                    |*/
+/*|                   2004-21                                        |*/
+/*|                   Mail yves.colliard§ycos.de                     |*/
+/*|                   Use at your own RISK|                          |*/
+/*|                                                                  |*/
+/*| Function Y$JI:    External line command: JI                      |*/
+/*|                                                                  |*/
+/*| Author:           Yves Colliard                                  |*/
+/*+------------------------------------------------------------------+*/
+/*| VERS 2.23  21.12.2021 Yves Colliard                              |*/
+/*+------------------------------------------------------------------+*/
+
+address "ISREDIT"
+"MACRO (PARM) NOPROCESS"
+"PROCESS RANGE "parm
+
+"(CURLINE CURCOL) = CURSOR"
+
+"(LINE) = LINE "Curline
+
+parse value Line with . jclstmt jclparm .
+jclstmt=strip(jclstmt)
+jclparm=strip(jclparm)
+
+select
+when left(line,2)<>"//" then do
+  zedsmsg=''
+  zedlmsg="Selected line not a JCL."
+  ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+  "CURSOR = "CURLINE CURCOL
+  return 8
+end
+when left(line,3)="//*" then do
+  zedsmsg=''
+  zedlmsg="Selected line is a JCL comment."
+  ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+  "CURSOR = "CURLINE CURCOL
+  return 8
+end
+when jclstmt="INCLUDE" then do
+  if left(jclparm,7)<>"MEMBER=" then do
+    zedsmsg=''
+    zedlmsg="Selected line JCL INCLUDE syntax error - MEMBER= expected."
+    ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+    "CURSOR = "CURLINE CURCOL
+    return 8
+  end
+  jclparm=substr(jclparm,8)
+  if length(jclparm)>8 then do
+    zedsmsg=''
+    zedlmsg="Selected line JCL INCLUDE syntax error -",
+      "Member name length greater 8 - "length(jclparm)
+    ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+    "CURSOR = "CURLINE CURCOL
+    return 8
+  end
+  call do_incl
+end
+when jclstmt="EXEC" then do
+  if left(jclparm,4)="PGM=" then do
+    zedsmsg=''
+    zedlmsg="Selected line JCL is an EXEC PGM= not PROC"
+    ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+    "CURSOR = "CURLINE CURCOL
+    return 8
+  end
+  if left(jclparm,5)="PROC=" then do
+    jclparm=substr(jclparm,6)
+  end
+  parse var jclparm jclparm ","
+  if length(jclparm)>8 then do
+    zedsmsg=''
+    zedlmsg="Selected line JCL PROC syntax error -",
+      "Procedure name length greater 8 - "length(jclparm)
+    ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+    "CURSOR = "CURLINE CURCOL
+    return 8
+  end
+  call do_incl
+end
+otherwise
+  zedsmsg=''
+  zedlmsg="Selected line must be an INCLUDE or EXEC PROC statement."
+  ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+  "CURSOR = "CURLINE CURCOL
+  return 8
+end
+"CURSOR = "CURLINE CURCOL
+return 0
+/* */
+do_incl:
+/* JCL INCLUDE statement */
+
+/* find possible JCLLIB */
+fnd="N"
+call find_jcllib
+if fnd<>"N" then do
+  do i=mem.0 to 1 by -1
+     giv=mem.i
+     "LINE_AFTER "curline" = INFOLINE (giv)"
+  end
+  giv=copies("=",length(fnd))
+  "LINE_AFTER "curline" = INFOLINE (giv)"
+  "LINE_AFTER "curline" = INFOLINE (fnd)"
+end
+else do
+  call find_proclib
+  if fnd<>"N" then do
+    do i=mem.0 to 1 by -1
+       giv=mem.i
+       "LINE_AFTER "curline" = INFOLINE (giv)"
+    end
+    giv=copies("=",length(fnd))
+    "LINE_AFTER "curline" = INFOLINE (giv)"
+    "LINE_AFTER "curline" = INFOLINE (fnd)"
+  end
+  else do
+    zedsmsg=''
+    zedlmsg="Member" jclparm "not found in JCLLIB or PROCLIB"
+    ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+    "CURSOR = "CURLINE CURCOL
+    return 8
+  end
+end
+
+find_jcllib:
+/* find possible JCLLIB */
+dsc=0
+do j=curline-1 to 1 by -1
+  "(xstat) = XSTATUS "j
+  if xstat = "NX" then do
+    "(YLIN) = LINE "j
+    select
+    when left(ylin,3)="//*" then nop /* no comment */
+    when left(ylin,2)<>"//" then nop /* no jcl     */
+    otherwise
+      parse var ylin . jc2 jc3 .
+      if jc2="JCLLIB" then do
+        parse var jc3 "ORDER=" jc4 .
+        dsc=j
+        leave j
+      end
+    end
+  end
+end
+/* possible:                                                   */
+/* jcllib order=a.b.c                                          */
+/* jcllib order=(a.b.c,d.e.f)                                  */
+/* jcllib order=(a.b.c,                                        */
+/*        d.e.f)                                               */
+/* jcllib order=(a.b.c,                                        */
+/* * comment                                                   */
+/*        d.e.f)                                               */
+if dsc<>0 then do
+  jc4=strip(jc4)
+  select
+  when left(jc4,1)<>"(" then do
+    lin=jc4
+  end
+  when left(jc4,1)="(" & right(jc4,1)=")" then do
+    parse var jc4 "(" lin ")"
+  end
+  otherwise
+  /* Comment Start
+  trace ?i
+     Comment End */
+    lin=substr(jc4,2)
+    do j=dsc+1 to curline-1 until right(jc4,1)=")"
+      "(xstat) = XSTATUS "j
+      if xstat = "NX" then do
+        "(YLIN) = LINE "j
+        if left(ylin,3)="//*" then nop /* no comment */
+        else do
+          parse var ylin . jc4
+          jc4=strip(jc4)
+          lin=lin""jc4
+        end
+      end
+    end
+    parse var lin lin ")"
+  end
+  do dsc=1 until lin=""
+    parse var lin dsi.dsc "," lin
+    dsi.dsc=strip(dsi.dsc,"B","'")
+    if sysdsn("'"dsi.dsc"("jclparm")'")="OK" then do
+      call bpxwdyn "alloc da("dsi.dsc"("jclparm")) shr rtddn(ydd1)"
+      if result=0 then do
+        address tso,
+        "execio * diskr "ydd1" (stem mem. finis"
+        call bpxwdyn "free fi("ydd1")"
+        fnd="Found in JCLLIB" dsi.dsc "-" dsc "in list"
+        leave dsc
+      end
+    end
+  end
+end
+/* Comment Start
+say lin
+do l2 = 1 to dsc
+  say dsi.l2 "-" l2
+end
+   Comment End */
+return
+
+find_proclib:
+/* find possible PROCLIB */
+
+address tso,
+"NEWSTACK"
+signal on error name the_error
+address tso,
+"Y$PROCJ"       /* call setup pgm        */
+if rc<>0 then do
+  zedsmsg=""
+  zedlmsg="Problem calling Y$PROCJ - please review customization"
+  ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+  exit
+end
+signal off error
+prc=0
+do queued()          /* for all data in queue */
+  prc=prc+1
+  parse pull ycset   /* get the info          */
+  interpret "proc."prc "=" ycset    /* get the dataset name  */
+end
+address tso,
+"DELSTACK"
+/* */
+do l1=1 to prc
+  if sysdsn("'"proc.l1"("jclparm")'")="OK" then do
+    fnd="Found in PROCLIB" proc.l1 "-" l1 "in list"
+    prc=l1
+    leave l1
+  end
+end
+
+if fnd="N" then return
+
+found:
+call bpxwdyn "alloc da("proc.l1"("jclparm")) shr rtddn(ydd1)"
+if result<>0 then do
+  return "ERROR allocating the dataset member"
+  zedsmsg=""
+  zedlmsg="ERROR allocating the dataset member" proc.l1"("jclparm")"
+  ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+  exit
+end
+address tso,
+"execio * diskr "ydd1" (finis stem mem."
+call bpxwdyn "free fi("ydd1")"
+
+return
+
+/* */
+the_error:
+  zedsmsg=""
+  zedlmsg="Problem calling Y$PROCJ - please review customization"
+  ADDRESS ISPEXEC "SETMSG MSG(ISRZ001)"
+  exit

@@ -1,0 +1,666 @@
+* MVS Commands - 21.04.2023
+* Samples for the EX (SDSF) line command from YCLMACRX
+* all commands can also be called from outside EDIT:
+* TSO YCLMACRX sdsf d c
+* This way could also be used in a Rexx Batch|
+/*+------------------------------------------------------------------+*/
+/*| YCLMACRX     (c)  YCOS Yves Colliard Software                    |*/
+/*|                   2004-23                                        |*/
+/*|                   Mail yves.colliard§ycos.de                     |*/
+/*|                   Use at your own RISK|                          |*/
+/*+------------------------------------------------------------------+*/
+
+* consoles
+sdsf d c
+* consoles - list
+sdsf d c,l
+* consoles - my current one
+sdsf d c,*
+* consoles - backlog
+sdsf d c,b
+* consoles - master authority (RACF controlled)
+sdsf d c,m
+* consoles - hardcopy settings - syslog/operlog
+sdsf d c,hc
+* console of this operator
+sdsf d c,cn=myoper
+
+* consoles - emcs
+sdsf d emcs
+sdsf d emcs,full,cn=yvescn
+
+* PFK - Program Function Key
+sdsf d pfk
+sdsf d pfk,cn=myoper
+
+* route command
+sdsf ro sysa,d t
+* route command - to all systems
+sdsf ro *all,d t
+* route command - to all other systems
+sdsf ro *other,d t
+* route command - to more than one system
+sdsf ro (sysa,sysb),d t
+* route command - and change default timeout
+sdsf ro t=0,*all,d t
+
+* time
+sdsf d t
+* sysplex etr/stp
+sdsf d etr
+sdsf d etr,data
+
+* MPF - Message Processing Facility
+sdsf d mpf
+* MPF - Messages
+sdsf d mpf,m
+* MPF - Colors
+sdsf d mpf,c
+* MPF - Command useer exit
+sdsf d mpf,cmd
+
+* log on hardcopy (syslog/operlog) - up to 122 characters
+sdsf l 'das ist ein Beispiel'
+sdsf l 'this is a sample'
+
+* send to operator
+sdsf se 'Hallo',cn=myoper
+* send to user
+sdsf se 'Hallo du',user=(yves)
+* send to user - at least during next logon
+sdsf se 'Hallo du',user=(yves),logon
+* list all brodcast messages
+sdsf se list
+
+* IPL & system
+sdsf d iplinfo
+* IPL parms details
+sdsf d iplinfo,csa
+sdsf d iplinfo,omvs
+sdsf d iplinfo,lpa
+sdsf d iplinfo,license
+sdsf d iplinfo,prog
+
+* io
+sdsf d ios,config
+sdsf d ios,config(all)
+sdsf d ios,hyperpav
+
+* Parmlib concatenation
+sdsf d parmlib
+* Parmlib concatenation with errors
+sdsf d parmlib,e
+
+* Static Symbols
+sdsf d symbols
+sdsf d symbols,DETAIL
+sdsf d symbols,SUMmary
+* Static Symbols - a selected symbol name
+sdsf d symbols,Symname=sysname
+sdsf d symbols,Symname=sysplex
+
+* Start - initiate started task
+sdsf start tso
+sdsf start rmf.rmf
+sdsf s lla,sub=mstr
+sdsf s cicsv33,jobname=cicsprd1,msgclass=8
+
+* Display Activity
+sdsf d a
+sdsf d a,l
+sdsf d a,a
+sdsf d ts,l
+sdsf d a,net
+sdsf d a,JES*
+sdsf d a,gtf*
+sdsf d a,a,userid=yves
+
+* Modify - send info to an address space (reacting on MODIFY command|)
+sdsf F lla,update=xx
+
+* Stop - end an address space (reacting on STOP command|)
+sdsf stop tso
+sdsf p rmf
+
+* Cancel an address space
+sdsf c ycos01z
+* IEE301I xxxxxxxx          CANCEL COMMAND ACCEPTED
+  $HASP395 YCOS01Z  ENDED - ABEND=S222
+
+* Cancel an address space with Dump
+sdsf c ycos01z,
+* IEE301I xxxxxxxx          CANCEL COMMAND ACCEPTED
+  $HASP395 YCOS01Z  ENDED - ABEND=S122
+
+* Address Space marked as Non-Cancelable
+* IEE838I xxxxxxxx          NON-CANCELABLE - ISSUE FORCE ARM
+  sdsf force ycos01z,arm
+
+* Force an address space - be careful|
+sdsf force ycos01z
+* IEE301I xxxxxxxx          FORCE COMMAND ACCEPTED
+  $HASP395 YCOS01S  ENDED - ABEND=SA22
+
+
+* IEE838I xxxxxxxx          CANCELABLE - ISSUE CANCEL BEFORE FORCE
+  sdsf c ycos01z
+
+* ppt - program property table
+sdsf d ppt,ALL]PARMlib]DEFault]NAME=genam*?
+sdsf d ppt
+  IEF386I 12.26.29 DISPLAY PPT 870
+  Parmlib Values
+  PgmName  NC NS PR ST ND BP Key 2P 1P NP NH CP DA PA
+  YASMNONC  Y  .  .  .  .  .  8   .  .  .  .  .  .  .
+...
+  Reference
+  Synonym -------------Meaning---------------   ----SCHEDxx keyword-----
+     NC   Non-cancelable                        NOCANCEL
+
+* replies
+sdsf d r
+sdsf d r,cn=(all)
+sdsf d r,l
+sdsf d r,l,cn=(all)
+sdsf d r,r,cn=(all)
+sdsf d r,l,t,cn=(all)
+
+* devices
+sdsf d u
+sdsf d u,,,2800,3
+sdsf d u,vol=vol001
+sdsf d u,,alloc,1002,1
+sdsf d u,dasd,online,,4
+sdsf d u,ctc,alloc,,32
+sdsf d u,ctc,alloc,2600,32
+sdsf d u,,as
+
+* matrix
+sdsf d m=cpu
+sdsf cf cpu(2),online
+sdsf cf cpu(2),offline
+sdsf d m=stor
+sdsf d m=chp(80)
+sdsf d m=chp(83)
+sdsf d m=dev(1002)
+sdsf d m=config(07)
+sdsf v path(1002,80),offline
+sdsf v path(1002,80),online
+sdsf cf chp(80),offline
+sdsf cf chp(80),online
+
+* device
+sdsf ds p,1002,3
+sdsf ds qd,1002,1
+sdsf ds qd,vol=voll01
+sdsf ds qd,1002,5,totalcyl
+sdsf ds qd,1002,1,ucb
+sdsf ds ql,list
+sdsf ds ql,60381
+sdsf v 1E53,offline
+sdsf v 1E53,online
+sdsf d u,,alloc,1E53,1
+sdsf d u,,,1E53,1
+sdsf ds s,0AA6,1
+sdsf ds s,0AA6,1
+sdsf ds qt,0f00,10
+
+* sms
+sdsf d sms
+sdsf d sms,sg(all)
+sdsf d sms,sg(sms),listvol
+sdsf d sms,vol(y3work)
+
+* smf
+sdsf d smf
+sdsf d smf,o
+
+* dump
+sdsf d d
+SDSF DUMP PARMLIB=AC,SYMDEF=(&DMPNAME.='RXSLEEP')
+
+* grs
+sdsf d grs,c
+sdsf d grs,res=(sysdsn,sys1.macl*)
+sdsf d grs,analyze,waiter
+sdsf d grs,analyze,blocker
+sdsf d grs,analyze,dependency
+sdsf d grs,analyze,dep
+sdsf d grs,analyze,latch,dep
+
+* sysplex xcf
+sdsf d opdata
+sdsf d xcf
+sdsf d xcf,s,all
+sdsf d xcf,cpl
+sdsf d xcf,cpl,type=sysplex
+sdsf d xcf,cpl,type=cfrm
+sdsf d xcf,cpl,type=logr
+sdsf d xcf,grp
+sdsf d xcf,grp,sysgrs,all
+sdsf d xcf,grp,dfhir000,all
+sdsf d xcf,grp,IXCLO14C,all
+sdsf d xcf,pi
+sdsf d xcf,pi,dev=0411
+sdsf d xcf,pi,strnm=ixc*
+sdsf d xcf,po
+sdsf d xcf,po,dev=0415
+sdsf d xcf,po,strnm=ixc*
+sdsf d xcf,classdef
+sdsf d xcf,classdef,class=default
+sdsf d xcf,classdef,class=def16k
+sdsf d xcf,classdef,class=def64k
+sdsf d xcf,localmsg
+
+* sysplex xcf set
+sdsf setxcf cpl,type=sysplex,acouple=sys1.xcf.cds03
+sdsf d xcf,cpl,type=sysplex
+sdsf setxcf cpl,type=sysplex,pswitch
+
+* sysplex cf
+sdsf d cf
+sdsf d xcf,cf
+sdsf d xcf,cf,cfnm=CFPR1
+sdsf d xcf,str
+sdsf d xcf,str,stat=notalloc
+sdsf d xcf,str,stat=fpconn
+sdsf d xcf,str,stat=noconn
+sdsf d xcf,str,strnm=IXC*
+sdsf d xcf,str,strnm=IXCSML1
+sdsf d xcf,str,strnm=IXCSML1,connm=all
+
+
+* logger
+sdsf d logger
+sdsf d logger,c
+sdsf d logger,c,lsn=sysplex.operlog
+sdsf d logger,c,lsn=sysplex.operlog,detail
+sdsf d logger,l
+sdsf d logger,l,lsn=atr.pgplex.delayed.ur
+sdsf d logger,l,lsn=sysplex.operlog
+sdsf d logger,str
+sdsf d logger,str,strn=operlog
+sdsf d logger,str,strn=rrs1
+
+* paging
+sdsf d asm
+
+* wlm change sc
+sdsf E jobname,SRVCLASS=newsc
+* wlm quiesce address space
+sdsf E jobname,Q
+* wlm unquiesce or/and return to original sc
+sdsf E jobname,RESUME
+
+* check commands hanging
+sdsf cmds d
+
+* check console mode
+sdsf d opdata,mode
+
+* check lpa
+sdsf d prog,lpa,mod=iefbr14
+* change lpa
+sdsf setprog lpa,add,mod=ISPGE78T,dsn=SYS1.SISPLOAD
+* change lpa and SVC entry
+sdsf setprog lpa,add,mod=svc00240,dsn=yves.ycints.linklib,     +
+        svcnumdec=(240)
+* change lpa and SVC entry of an ESR SVC
+sdsf setprog lpa,add,mod=svce0240,dsn=yves.ycints.linklib,     +
+             SVCNUMDEC=(109,240)
+* delete from lpa
+sdsf setprog lpa,delete,mod=xmsrouta,force=yes
+
+* work with exits
+sdsf d  PROG EXIT
+sdsf d  PROG EXIT,exitname=IEFDB401,diag
+sdsf d  PROG EXIT,exitname=sys.iefusi,diag
+sdsf SETPROG EXIT,ADD,EX=SYS.IEFUSI,    +
+     MOD=YCDUSI,DSN=yves.ycos.linklib
+sdsf SETPROG EXIT,ADD,EX=SYS.IEFUSI,    +
+     MOD=IEFBR14,DSN=sys1.linklib,JOBname=IPREG*
+sdsf SETPROG EXIT,replace,EX=SYS.IEFUSI,    +
+     MOD=YCDUSI,DSN=yves.ycos.linklib
+sdsf SETPROG EXIT,replace,EX=SYS.IEFUSI,    +
+     MOD=IEFBR14,DSN=sys1.linklib
+sdsf SETPROG EXIT,delete,EX=SYS.IEFUSI,    +
+     MOD=YCDUSI
+
+* work with lnklst
+sdsf +
+D  PROG,LNKLST
+sdsf +
+SETPROG LNKLST,DEFINE,NAME=LNKLSTYY,COPYFROM=LNKLST00
+sdsf +
+SETPROG LNKLST,DELETE,NAME=LNKLSTYY,DSN=SYS1.SISFMOD1
+sdsf +
+SETPROG LINKLST,ADD,NAME=LNKLSTYY,DSN=YVES.YCINTS.LINKLIB,VOL=Y3WORK
+sdsf +
+SETPROG LINKLST,ADD,NAME=LNKLSTYY,DSN=YVES.YCINTS.LINKLIB,VOL=Y3WORK +
+     ATBOTTOM - default
+     ATTOP
+     AFTER=dsname
+sdsf +
+SETPROG LNKLST,ACTIVATE,NAME=LNKLSTYY
+sdsf +
+SETPROG LNKLST,UPDATE,JOB=*,DELAY=5
+
+Dynamic Linklist Add per command:
+sdsf +
+SETPROG LINKLST,DEFINE,NAME=LNKLSTYY,COPYFROM=CURRENT
+sdsf +
+SETPROG LINKLST,ADD,NAME=LNKLSTYY,DSN=customer.YCELOGZ.LINKLIB,VOL=??????
+sdsf +
+SETPROG LINKLST,ADD,NAME=LNKLSTYY,DSN=customer.YCELOGZ.LINKAPF,VOL=??????
+sdsf +
+SETPROG LINKLST,ACTIVATE,NAME=LNKLSTYY
+sdsf +
+SETPROG LINKLST,UPDATE,JOB=*,DELAY=5
+
+* work with APF
+sdsf d prog,apf
+Dynamic Add APF per command:
+sdsf +
+SETPROG APF,ADD,DSNAME=customer.YCELOGZ.LINKAPF,SMS
+or
+sdsf +
+SETPROG APF,ADD,DSNAME=customer.YCELOGZ.LINKAPF,VOLUME=xxxxxx
+
+* lla
+sdsf d lla
+sdsf D LLA,STATISTICS
+sdsf D LLA,DSN=xxxxxxxx,MEMBER=*
+sdsf D LLA,STATS,LIBRARY=xxxx,MEMBER=YYY*,FETCHED
+sdsf ro *all,F lla,refresh
+sdsf F lla,update=xx
+sdsf F LLA,UPDATE,LIBRARY=libnameÄ,MEMBER=memÄ,...ÜÜ
+
+* Display SLIP
+sdsf D SLIP
+* Display SLIP ID
+sdsf D SLIP=HEM1
+* Disable/Modify a SLIP ID
+sdsf SLIP MOD,ID=HEM1,DISABLE,END
+* Delete a SLIP ID
+sdsf SLIP DEL,ID=HEM1
+* Dump Suppression   no SVC or SYSUDUMP on an SD37 Error
+sdsf SLIP SET,Comp=D37,ID=XD37,Action=(NOSVCD,NOSYSU),END
+* Action: NODUMP, NOSVCD, NOSYSU, NOSYSA
+sdsf SLIP SET,C=EC6,REason=0000FFXX,ID=XEC6,Action=NODUMP,END
+* Create a Dump on some Errors
+* SVC Dump in Module in Case of User Abend
+sdsf SLIP SET,LPAMOD=HEMSFR,ACTION=SVCD,COMP=UXXXX,ID=HEM1,END
+* Create a Dump on Instruction Fetch
+* Instruction Fetch within RANGE, get the first 5
+sdsf SLIP SET,IF,ACTION=SVCD,RANGE=(05E2A580,05E2A588), +
+     JOBNAME=HEMSSIYY,MATCHLIM=5,END
+* Create a TRACE on Instruction Fetch
+* all Instruction Fetch within a Range will
+* produce for a given Job a GTF Tace record
+Start GTF with TRACE=SLIP Option
+sdsf SLIP SET,IF,ACTION=TRACE,RANGE=(05D58BB0,05D58BB0+13A8), +
+     JOBNAME=yvesjob,MATCHLIM=9999,END
+
+* display IKJTSO Settings
+sdsf d ikjtso
+* change IKJTSO Settings
+sdsf t ikjtso=yc
+
+* 64Bit Virtual storage - shared memory objects
+sdsf d vs,hvshare
+* 64Bit Virtual storage - common memory objects
+sdsf d vs,hvcommon
+* 64Bit Virtual storage - large frame usage
+sdsf d vs,lfarea
+
+* General SSI Commands
+SDSF D SSI
+SDSF D SSI,ALL
+SDSF D SSI,FUNC=01
+SDSF D SSI,SUBSYS=MSTR
+SDSF D SSI,SUBSYS=???F
+SDSF D SSI,SUBSYS=SF##
+SDSF D SSI,ALL,FUNC=01
+SDSF D SSI,ALL,FUNC=10
+SDSF D SSI,STAT=ACT
+SDSF D SSI,STAT=INACTIVE
+
+* ADD A SUBSTYSTEM
+SDSF SETSSI   ADD,SUBNAME=SF##
+* ADD A SUBSTYSTEM AND RUN AN INIT ROUTINE
+SDSF SETSSI   ADD,S=SF##,INITRTN=SSIINI##
+* DEACTIVATE SUBSYSTEM
+SDSF SETSSI   DEACTIVATE,SUBNAME=SF##
+* ACTIVATE SUBSYSTEM
+SDSF SETSSI   ACTIVATE,SUBNAME=SF##
+
+* DELETE A SUBSTYSTEM
+sdsf SETSSI DELETE,SUBNAME=subname,FORCE
+
+* vtam
+sdsf d net,bfruse,buf=(t1,t2)
+sdsf d net,vtamopts
+sdsf d net,vtamopts,function=appnchar
+sdsf d net,id=istlsxcf,e
+sdsf v net,id=istlsxcf,inact
+
+* AXR - System Rexx
+sdsf F AXR,SR STatus
+sdsf F AXR,SR STatus,detail
+sdsf F AXR,SR REXXLIB
+sdsf F AXR,myrexx
+
+* Catalog Address Space
+sdsf f catalog,report
+sdsf f catalog,ecshr
+sdsf f catalog,castats
+sdsf f catalog,allocated
+
+* z/OS 2.2 SMFLIMIT
+sdsf D SMFLIMÄ,S]SUMMARYÜ
+      Ä,R]REGION Ä,MEMBER=SMFLIMxxÄ,RULE=xxxxÜÜ ] Ä,joboptionsÜ
+sdsf d smflim
+sdsf d smflim,r
+sdsf d smflim,r,member=smflimyc
+sdsf d smflim,r,member=smflimyc,rule=3
+sdsf d smflim,r,jobname=ipreg4
+
+-----------------------------------------------------------------------
+* sysplex commands
+* Display sysplex timer
+sdsf +
+d etr
+
+* sysplex Display Command Prefix CPF
+sdsf +
+d opdata
+
+* Display Sysplex
+sdsf +
+d xcf
+sdsf +
+d xcf,s,all
+
+* Display Sysplex Settings and Couple
+sdsf +
+d xcf,cpl
+sdsf +
+d xcf,cpl,type=sysplex
+
+* Display Sysplex Groups and Members
+sdsf +
+d xcf,grp
+sdsf +
+d xcf,grp,sysgrs,all
+sdsf +
+d xcf,grp,dfhir000,all
+
+* Display Sysplex Pathin and Pathout
+sdsf +
+d xcf,pi
+sdsf +
+d xcf,pi,strnm=*
+sdsf +
+d xcf,po,strnm=*
+
+* Display Sysplex Coupling Facility - Hardware
+sdsf +
+d cf
+sdsf +
+d cf,cfname=cfy1
+sdsf +
+d cf,cfname=cfy2
+
+* Display CF Channels - internal
+sdsf +
+d m=chp(30)
+sdsf +
+d m=chp(31)
+
+* Display CF Channels - external
+sdsf +
+d m=chp(42)
+sdsf +
+d m=chp(43)
+
+* Display Sysplex Coupling Facility - Software
+sdsf +
+d xcf,cf
+sdsf +
+d xcf,cf,cfnm=cfy1
+sdsf +
+d xcf,cf,cfnm=cfy2
+
+* Display XCF Structures
+sdsf +
+d xcf,str
+
+sdsf +
+d xcf,str,strnm=ixc*
+sdsf +
+d xcf,str,strnm=ixcsml1
+sdsf +
+d xcf,str,strnm=IRRXCF00_B001
+*
+sdsf +
+d xcf,str,strnm=LOGR_SMF_*
+sdsf +
+d xcf,str,strnm=LOGR_SMF_RACF
+* with all connection information
+sdsf +
+d xcf,str,strnm=IXCLRG1,connm=all
+sdsf +
+d xcf,str,strnm=LOGR_SMF_RACF,connm=all
+
+* XCF single rebuild
+sdsf +
+setxcf start,rb,strnm=ixcsml1
+sdsf +
+setxcf start,rb,strnm=ixcsml1,loc=other
+sdsf +
+setxcf start,rb,strnm=IRRXCF00_B001,loc=other
+
+*-----------------------------------------------------------
+* Coupling facility deactivation
+
+* Check structures active on CF
+sdsf +
+d xcf,cf,cfnm=cfy1
+sdsf +
+d xcf,cf,cfnm=cfy2
+
+* Set CF in MAINTMODE
+sdsf setxcf start,maintmode,cfnm=cfy1
+sdsf setxcf start,maintmode,cfnm=cfy2
+
+* Check Reallocation of structures - optional|
+sdsf +
+d xcf,reallocate,test
+
+* Run Reallocation of structures
+sdsf setxcf start,reallocate
+
+* Check structures active on CF
+sdsf +
+d xcf,cf,cfnm=cfy1
+sdsf +
+d xcf,cf,cfnm=cfy2
+* check:
+* NO STRUCTURES ARE IN USE BY THIS SYSPLEX IN THIS COUPLING FACILITY
+
+* Display last Reallocation of structures report - optional|
+sdsf +
+d xcf,reallocate,report
+
+*-----------------------------------------------------------
+* Coupling facility reactivation
+
+* Reset CF in MAINTMODE
+sdsf setxcf stop,maintmode,cfnm=cfy1
+sdsf setxcf stop,maintmode,cfnm=cfy2
+
+* Check Reallocation of structures - optional|
+sdsf +
+d xcf,reallocate,test
+
+* Run Reallocation of structures
+sdsf setxcf start,reallocate
+
+* Check structures active on CF
+sdsf +
+d xcf,cf,cfnm=cfy1
+sdsf +
+d xcf,cf,cfnm=cfy2
+* check:
+* STRUCTURES:
+* EZBEPORT               HSA_LOG                IRRXCF00_B001
+* ...
+
+* Display last Reallocation of structures report - optional|
+sdsf +
+d xcf,reallocate,report
+
+*-----------------------------------------------------------
+* Coupling facility reactivation
+
+* Reset CF in MAINTMODE
+sdsf setxcf stop,maintmode,cfnm=cfy1
+sdsf setxcf stop,maintmode,cfnm=cfy2
+
+* Check Reallocation of structures - optional|
+sdsf +
+d xcf,reallocate,test
+
+* Run Reallocation of structures
+sdsf setxcf start,reallocate
+
+* Check structures active on CF
+sdsf +
+d xcf,cf,cfnm=cfy1
+sdsf +
+d xcf,cf,cfnm=cfy2
+* check:
+* STRUCTURES:
+* EZBEPORT               HSA_LOG                IRRXCF00_B001
+* ...
+
+* Display last Reallocation of structures report - optional|
+sdsf +
+d xcf,reallocate,report
+
+*-----------------------------------------------------------
+
+* Sysplex special commands
+*
+sdsf +
+SETXCF MODIFY,STRNAME=logr_smf_racf,ALTER=ENABLED
+*
+sdsf +
+D XCF,STR,STAT=dealloc
+*
+sdsf +
+D XCF,STR,STAT=POLICYCHANGE
+*
+sdsf +
+SETXCF FORCE,PNDSTR,CFNAME=cfy2
+*

@@ -1,0 +1,1397 @@
+# USS Commands and subcommands - 15.11.2022
+# Samples for the EX (UNIX/UNIXSU/UNIXENV/UNIXSUENV/UDLIST/UFDIR/UFFIL)
+#                           line command from YCLMACRX
+# New 2.23        EX UNIXL   - using login
+#                 EX UNIXSUL - using login
+# all commands can also be called from outside EDIT/VIEW:
+# TSO YCLMACRX unix ls
+# TSO YCLMACRX udlist /u
+# TSO YCLMACRX ufdir  /u *c*
+# TSO YCLMACRX uffil  /u *c*
+# TSO YCLMACRX unix ls
+# TSO YCLMACRX unixl ls -l /
+# This way could also be used in a Rexx Batch|
+/*+------------------------------------------------------------------+*/
+/*| YCLMACRX     (c)  YCOS Yves Colliard Software                    |*/
+/*|                   2004-24                                        |*/
+/*|                   Mail yves.colliard§ycos.de                     |*/
+/*|                   Use at your own RISK|                          |*/
+/*+------------------------------------------------------------------+*/
+
+
+
+# show current working directory
+unixl +
+  pwd
+
+===================================================================
+
+# change directory
+unixl +
+  cd
+
+# home dir
+unixl +
+  cd
+
+# relative dir
+unixl +
+  cd dir
+
+# absolute dir
+unixl +
+  cd /dir1/dir2
+
+# replace old to new in current working dir (cwd)
+unixl +
+  cd old new
+
+unixl +
+  cd -
+# go to previous dir
+
+unixl +
+  cd ..
+# go to parent dir
+
+===================================================================
+
+# create directory yvest under cwd
+unixl +
+  mkdir yvest
+
+# create directory yvest under / (root)
+unixl +
+  mkdir /yvest
+
+# create directory with all needed dirs -p
+unixl +
+  mkdir -p /u/YCOS01/d1/d2/d3
+
+# create directory with permission bits
+unixl +
+  mkdir -m 750 /u/YCOS01/dirnew
+
+===================================================================
+
+# details
+unixl +
+  ls -l
+
+# details
+unixl +
+  ls -lE
+
+# extended attributes
+unixl +
+  ls -E
+
+# names coma separated
+unixl +
+  ls -m
+
+# UID and GID number
+unixl +
+  ls -n
+
+# subdirectories
+unixl +
+  ls -R
+
+# sort by last modification time
+unixl +
+  ls -t
+
+# sort by last modification time
+unixl +
+  ls -T
+
+# sort by last access time
+unixl +
+  ls -u
+
+# audit bits
+unixl +
+  ls -W
+
+===================================================================
+
+# audit bits
+unixl +
+  ls -W
+
+===================================================================
+
+# Create a link to a file
+unixl +
+  ln
+
+# Hard Link
+#    same File System (Mount)
+#    ln old_file_name new_dir
+
+unixl +
+  ln /u/YCOS01/rexx.test /u/YCOS01/mydir/underdir
+
+
+# Symbolic links
+#    absolute or relative target symbol
+#    ln -s target_name symbolic_link
+
+unixl +
+  ln -s /samples /u/YCOS01/symblink_to_samples
+
+# show the symbolic link
+unixl +
+  ls -l /u/YCOS01/symblink_to_samples
+# follow the symbolic link
+unixl +
+  ls -L /u/YCOS01/symblink_to_samples
+
+
+# Symbolic links
+#  using MVS (static) symbols
+#  $SYSSYMR and $SYSSYMA must be used as first value in symbolic link
+#  Indicates that Symbolic link is using Symbols and needs substitution
+#  $SYSSYMA - absolute
+#  $SYSSYMR - relative
+
+unixl +
+  ln -s +
+'$SYSSYMA/u/YCOS01/&SYSPLEX'  /u/YCOS01/Plex/syma
+
+Access to  /u/YCOS01/Plex/syma
+# will resolve in /u/YCOS01/YCOSPLEX
+
+
+unixl +
+  ln -s +
+'$SYSSYMR/&SYSPLEX'  /u/YCOS01/Plex/symr
+
+Access to  /u/YCOS01/Plex/symr
+# will resolve in /u/YCOS01/Plex/YCOSPLEX
+
+
+# External links
+#    exec() does a stat() -> stat() make the search; if name "seem to be"
+#    a PDS than Look for MVS Search order
+     ln -e external_name file_name
+
+===================================================================
+
+# change file "attributes"
+unixl +
+  chmod, extattr, chown, chgrp
+
+===================================================================
+
+# concatenate files
+unixl +
+  cat
+
+# list to screen
+unixl +
+  cat /u/YCOS01/yves.rex
+# list to dataset
+unixl +
+  cat /u/YCOS01/yves.rex >/u/YCOS01/n.rex
+
+# append list to dataset
+unixl +
+  cat /u/YCOS01/yves.rex >>/u/YCOS01/n.rex
+
+# list uss file to screen
+unixl +
+  cat "/u/YCOS01/yvest.test.ebcdic"
+
+# list mvs dataset to screen
+unixl +
+  cat "//'SYS1.SAMPLIB(CSF)'"
+
+# list mvs dataset to uss file - same as copy|
+unixl +
+  cat "//'SYS1.SAMPLIB(CSF)'" >/u/YCOS01/csf.proc
+
+# list mvs dataset to uss file - same as copy|
+unixl +
+  +
+      cat  +
+         "//'YCOS01.YCOS.USS.JCL(IEBGENER)'"      +
+  >/u/YCOS01/Gener1
+
+===================================================================
+
+# list first/last lines of file on screen - defaut 10
+unixl +
+  head, tail
+
+# list first 2 lines of file on screen
+unixl +
+  head -n 5 "//'SYS1.SAMPLIB(CSF)'"
+
+unixl +
+  tail /u/YCOS01/Mystd.OUT
+
+# list alst 10 lines of file on screen - usefull for logs
+unixl +
+  tail "//'SYS1.SAMPLIB(CSF)'"
+
+# list first 5 lines to screen
+unixl +
+  head -n 5 /u/YCOS01/yves.rex
+
+# append last 3 lines to dataset
+unixl +
+  tail -n 3 /u/YCOS01/yves.rex >>/u/YCOS01/n.rex
+
+===================================================================
+
+# remove file or directory
+unixl +
+  rm
+
+# remove all files in directory
+unixl +
+  rm *
+
+# remove all files in directory - with list
+unixl +
+  rm -rvf /u/YCOS01/privm/*
+
+# remove all all all all - NEVER USE IT|||||||||||||||||||
+unixl +
+  rm -rf *
+     -r or -R recursive
+     -i prompt are you sure?
+     -v list removed files
+     -f Deletes read-only files immediately without asking for confirmation
+
+===================================================================
+
+# copy file or directory
+unixl +
+  cp
+
+# copy an "lf" file to an MVS to get it "CRLF"
+unix ,
+ cp -F lf        /u/YCOS01/ycos1.tx ,
+ "//'YCOS01.YCOS.SEQ'"
+
+# copy an MVS Member to USS file
+unix ,
+ cp "//'YCOS01.YCOS.USS.JCL(BPXBATY1)'" /u/YCOS01/BPXBATY1.jcl
+
+# copy unix to unix
+# Preserves the modification and access times and
+# file mode, file format, owner, and group owner, if authorized
+unixsu ,
+ cp -p /u/YCOS01/ycos1.tx /tmp
+
+===================================================================
+
+# move file or directory
+unixl +
+  mv
+
+===================================================================
+
+# search file
+  - many parms
+unixl +
+  find
+
+# find all *.rex files starting from root
+unixl +
+  find / -name "*.rex"
+
+# find all *.tx files starting from current working dir
+unixl +
+  find . -name "*.tx"
+
+     -perm  : permission bits
+     -atime : access time
+     -ctime : changed attributes time
+     -mtime : modified time
+     -ext   : extended attributes
+     -newer : file newer than the one giving
+     -size  : file size
+     -type  : file type
+     ...
+
+===================================================================
+
+# find data within files
+unixl +
+  grep
+
+# find all files (within *.c) with 'print' string
+unixl +
+
+# find all files (within *.c) with 'print' string - regardles of case
+unixl +
+
+# find all files (within *.c) with 'print' string - give line #
+unixl +
+
+# count all matches in files (within *.c) with 'print' string
+unixl +
+
+# list all files (within *.c) with matches 'print' string
+unixl +
+
+# find all files (within *.*) with 'print' or 'comment' string
+unixl +
+  -E using regular expression
+  | - german for ]
+
+# find all files (within *.*) with 'yves' 'Yves' 'Nves'
+unixl +
+  -E using regular expression
+  Ý (x'AD') - german for Ä
+  ¨ (x'BD') - german for Ü
+iconv - german keyboard... -> us
+
+===================================================================
+
+# compare files
+unixl +
+  cmp
+
+# compare files
+unixl +
+  cmp cmd1.tx  cmd2.tx
+
+# compare files - displays the byte number (in decimal) and the
+                  differing bytes (in octal format)
+unixl +
+  cmp -l cmd1.tx  cmd2.tx
+
+# compare files - displays the byte number (in decimal) and the
+                  differing bytes (in hexadecimal format)
+unixl +
+  cmp -lx cmd1.tx  cmd2.tx
+
+# compare files - Suppresses output and returns a nonzero status
+                  if the files are not identical
+unixl +
+  cmp -s cmd1.tx  cmd2.tx
+
+===================================================================
+
+# compare files and find differences
+unixl +
+  diff
+
+# compare files and find differences
+unixl +
+  diff ycos1.tx ycos2.tx
+
+# find differences - Shows n lines of context before and after each change
+unixl +
+  diff -c ycos1.tx ycos2.tx
+
+===================================================================
+
+# display file system
+unixl +
+  df
+
+# display file system with more details
+unixl +
+  df -P
+
+# display file system with status
+unixl +
+  df -v
+
+# display file system in 1024K blocks
+unixl +
+  df -k
+
+# display file system in 1024K blocks
+unixl +
+  df -S
+
+===================================================================
+
+# display command help
+unixl +
+  man
+
+# display command help for "ls, cat..." command
+unixl +
+  man ls
+unixl +
+  man cat
+unixl +
+  man ...
+
+===================================================================
+
+# display user and system information
+unixl +
+  who
+
+# all information
+unixl +
+  who -a
+
+===================================================================
+
+# display "me"
+unixl +
+  whoami
+
+unixl +
+  id
+
+===================================================================
+
+# set superuser
+unixl +
+  su
+
+===================================================================
+
+# display process information (all info - only superuser) - many parms
+unixl +
+  ps
+
+unixl +
+  ps -e
+unixsu ps -el
+
+===================================================================
+
+# display error code information
+bpxmtext errcode
+
+# USS Command
+unixl +
+  /bin/bpxmtext 058800b0
+
+# TSO Command
+bpxmtext 058800b0
+
+===================================================================
+
+# create/extract archive file - many parms
+unixl +
+  pax
+unixl +
+  man pax
+
+# create Archive
+unixl +
+  pax -wf "//'my.ps.dataset'"  all*
+
+# retrieve Archive
+unixl +
+  pax -rf "//'my.ps.dataset'"
+
+
+===================================================================
+
+# end a process
+unixl +
+  kill
+
+===================================================================
+
+# time since last ipl and other infos
+unixl +
+  uptime
+
+===================================================================
+
+# count
+unixl +
+  wc
+     -c      : byte count
+     -l      : line count
+     -m      : character count
+     -w      : word count
+unixl +
+  wc /u/YCOS01/ycos1.tx
+
+===================================================================
+
+# Datum / Uhrzeit - many format parms
+unixl +
+  date
+
+unixl +
+  date +"%d"."%m"."%y  "Weekday:"%A"
+
+unixl +
+  date +%H:%M:%S
+
+===================================================================
+
+# create arguments and run command
+
+# output of ls given in 4 per line
+unixl +
+  ls /u/YCOS01 | xargs -n 4 echo
+
+# find all *.tx files starting from current working dir
+#      and display content
+unixl +
+  find . -name "*.tx" | xargs cat
+
+# find all *.tx files starting from current working dir
+#      and display extended attributes
+unixl +
+  find . -name "*.tx" | xargs ls -E
+
+# find all *.tx files starting from current working dir
+#      and set attributes to 740
+unixl +
+  find . -name "*.tx" | xargs chmod 740
+
+===================================================================
+
+# output information to stdout
+
+unixl +
+  echo uss ist genial
+
+unixl +
+  echo they are $(ls | wc -l) files in this directory $(pwd)
+unixl +
+  ls
+unixl +
+  ls | wc -l
+
+#------------------------------------------------------
+# write to console
+#------------------------------------------------------
+
+unixl +
+  echo blabla > /dev/console
+# Operlog/Syslog
+# BPXF024I (userid) blabla
+
+
+===================================================================
+
+Using Pipes:
+
+# list 4 mostly referenced files
+unixl +
+  ls -ltr
+unixl +
+  ls -ltr | tail -n 4
+
+# number of files
+unixl +
+  ls | wc -l
+
+# number of files with names *.tx
+unixl +
+  find *.tx | wc -l
+
+# cat MVS dataset to Stdout | (Pipe) -> grep from Stdin
+  find line(s) with word PROC in MVS file
+unixl +
+  cat "//'SYS1.SAMPLIB(CSF)'" | grep 'PROC'
+
+# list files and enclose them in single quotes
+unix +
+ls /u/YCOS01 | sed "s/.*/'&'/"
+
+# list files and enclose them in double quotes
+unix +
+ls /u/YCOS01 | sed 's/.*/"&"/'
+
+# list files and enclose them in single quotes with continuation
+# dfdss Dump / Restore
+unix +
+ls /u/YCOS01 | sed "s/.*/'&', -/"
+
+===================================================================
+
+# Call OMVS
+OMVS ALARM ] NOALARM
+AUTOSCROLL ] NOAUTOSCROLL
+CONVERT(character_conversion_table)
+DBCS ] NODBCS
+DEBUG(NO ] YES ] EVENT ] DATA)
+ECHO ] NOECHO
+ENDPASSTHROUGH(ATTN ] CLEAR ] CLEARPARTITION ]
+     ENTER ] NO ] PA1 ] PA3 ] PF1 ] PF2 ] PF3 ... PF24 ] SEL)
+ESCAPE('escape-characters')
+LINES(n)
+PFn (ALARM ] NOALARM ] AUTOSCROLL ] NOAUTOSCROLL ] BACKSCR ] BOTTOM ]
+     CLOSE ] CONTROL ] ECHO ] NOECHO ] FWDRETR ] HALFSCR HELP ] HIDE ] NOHIDE ]
+     NEXTSESS ] NO ] OPEN ] PFSHOW ] NOPFSHOW ] PREVSESS ] QUIT ] QUITALL ]
+     REFRESH ] RETRIEVE RETURN ] SCROLL ] SUBCOMMAND ] TOP ] TSO )
+PFSHOW ] NOPFSHOW
+RUNOPTS('LE/370-runtime-options')
+SESSIONS(n)
+SHAREAS ] NOSHAREAS
+WRAPDEBUG(n)
+
+omvs nopfshow NOAUTOSCROLL
+omvs pf5(HALFSCR HELP)
+#
+     PF1(HELP)
+     PF2(SUBCOMMAND)
+     PF3(RETURN)
+     PF4(TOP)
+     PF5(BOTTOM)
+     PF6(TSO)
+     PF7(BACKSCR)
+     PF8(SCROLL)
+     PF9(NEXTSESS)
+     PF10(REFRESH)
+     PF11(FWDRETR)
+     PF12(RETRIEVE)
+     PF13(HELP)
+     PF14(SUBCOMMAND)
+     PF15(RETURN)
+     PF16(TOP)
+     PF17(BOTTOM)
+     PF18(TSO)
+     PF19(BACKSCR)
+     PF20(SCROLL)
+     PF21(NEXTSESS)
+     PF22(REFRESH)
+     PF23(FWDRETR)
+     PF24(RETRIEVE)
+
+# start OMVS with 3 sessions - use PF9(NEXTSESS) to navigate
+omvs sessions(3)
+
+===================================================================
+
+# Displays information about open files, sockets, and pipes
+zlsof Ä-pÄpidsÜ]Ä-aÄasidsÜ]Ä-jÄjobsÜÜ Ä-uÄusersÜÜ Ä-cÜ Ä-dÜ Ä-tÜ
+      Ä-iÜ Ä-lÜ Ä-nÜ Ä-suÜ Ä-vÜ
+      Ä-m maxtimeÜ Ä-rwÄsecondsÜÜ Äpathname]pipe]socketÜ
+      Ä-xÜ
+      Ä-jsonÜ
+
+# callable from
+# TSO SYS1.SBPXEXEC(BPXWLSOF)
+# Unix /bin
+# System rexx SYS1.SAXREXEC(BPXWLSOF)
+
+# file path
+unixsu /bin/zlsof /u/YCOS01
+# userid
+unixsu /bin/zlsof -x -u YCOS01
+
+# create json output
+unixsu +
+/bin/zlsof -json -u YCOS01 >/u/YCOS01/zlsof.json
+
+# z/OS Client Web Enablement Toolkit
+# Run Pretty-print -jsonformatter
+ex 'SYS1.SAMPLIB(HWTJSPRT)' '-s /u/YCOS01/zlsof.json'
+
+# shows extended process information - z/OS 2.4
+zlsof -x    -u YCOS01
+
+zlsof version=180930
+Searching for all file usage by user YCOS01
+Command       PID User      File System    Mountpoint   Inode/file/process info
+ISRDSLST 50332352 YCOS01(0)                             GMT Start: 02/10 18:31 E
+                                                        Parent pid: 1 Threads: 3
+                                                        Command: ISRDSLST
+                            OMVS.YCOS.ROOT /            r 1
+                            YCOS01.ZFS     /u/YCOS01    c 1
+ISRDSLST 50332352 YCOS01(0)                pipe: 2
+/bin/sh  16777972 YCOS01(0)                             GMT Start: 02/10 21:11 E
+                                                        Parent pid: 50332352 Thr
+                                                        Command: /bin/sh -c _BPX
+                            OMVS.YCOS.ROOT /            r 1
+                            YCOS01.ZFS     /u/YCOS01    c 1
+                            /dev           /SYSTEM/dev  rw 10 /dev/null
+/bin/sh  16777972 YCOS01(0)                pipe: 2
+zlsof End of output
+
+# output in JSON format to get parsed - z/OS 2.4
+zlsof -json -u YCOS01
+{"utility":"zlsof","version":"180930","request":"Searching for all file usage by
+...
+
+# sample zlsof path
+zlsof /u/YCOS01
+
+zlsof version=180930
+Searching for use of file system YCOS01.ZFS
+Command       PID User   File System Mountpoint  Inode/file
+EXEC     83886558 YCOS01 YCOS01.ZFS  /u/YCOS01/  c .
+/bin/sh  67109346 YCOS01 YCOS01.ZFS  /u/YCOS01/  c .
+zlsof End of output
+
+===================================================================
+
+# iconv convert from ger to us - EBCDIC
+# http://de.wikipedia.org/
+#         wiki/Extended_Binary_Coded_Decimals_Interchange_Code
+unix ,
+ iconv -f IBM-273 -t IBM-1047 ,
+  /u/yves/my.javao,
+  >/u/yves/my.java
+
+#         ascii        ebcdic
+unix ,
+ iconv -f ISO8859-1 -t IBM-273  ,
+  /u/YCOS01/ger-ascii,
+  >/u/YCOS01/ger-ebcdic
+
+===================================================================
+
+unixl +
+  man mount
+unixl +
+  man chmount
+
+# create a zfs
+unixsu zfsadm define -aggregate YCOS01.PRIV.ZFS -cylinders 15
+
+# format a zfs
+unixsu zfsadm format -aggregate YCOS01.PRIV.ZFS
+
+mount Ä-t fstypeÜ Ä-rvÜ Ä-a yes]include,sys1,...sys# ]exclude,]no]unmountÜ
+    Ä-o fsoptionsÜ Ä-d destsysÜ Ä-s nosecurity]nosetuidÜ -f fsname
+    pathnameÄ-wnÜ mount -q Ä-d destsysÜÄ-vÜ pathname
+
+# Mount the file system
+unixsu /usr/sbin/mount -f YCOS01.PRIV.ZFS   +
+                -t ZFS                      +
+                -a unmount                  +
+                /u/YCOS01/privm
+
+# Show info about a mounted file system
+unixsu /usr/sbin/mount -q
+                /u/YCOS01/privm
+unixsu /usr/sbin/mount -q -v                +
+                /u/YCOS01/privm
+
+# Change to R/O
+unixsu /usr/sbin/chmount -r                   +
+                /u/YCOS01/privm
+# Change to R/W
+unixsu /usr/sbin/chmount -w                   +
+                /u/YCOS01/privm
+
+mount Ä-R]-fÜ Ä-vÜ Ä-o normal]drain]immediate]force]resetÜ Ä-mÜ name ...
+# Unnmount file system
+unixsu /usr/sbin/unmount                    +
+                /u/YCOS01/privm
+unixsu /usr/sbin/unmount -R                 +
+                /u/YCOS01/privm
+unixsu /usr/sbin/unmount -f YCOS01.PRIV.ZFS
+
+# TSO Commands
+# Mount
+MOUNT FILESYSTEM(file_system_name)
+      MOUNTPOINT(pathname)
+      TYPE(file_system_type)
+      MODE(RDWR]READ)
+      PARM(parameter_string)
+      TAG(NOTEXT]TEXT,ccsid)
+      SETUID]NOSETUID
+      WAIT]NOWAIT
+      SECURITY]NOSECURITY
+      SYSNAME (sysname)
+      AUTOMOVE]AUTOMOVE(indicator,sysname1,sysname2,...,sysnameN)]
+      NOAUTOMOVE]UNMOUNT
+
+MOUNT FILESYSTEM('YCOS01.PRIV.ZFS')         +
+      MOUNTPOINT('/u/YCOS01/privm')         +
+      TYPE(ZFS)                             +
+      MODE(RDWR)                            +
+      UNMOUNT
+
+# Unmount
+UNMOUNT FILESYSTEM(file_system_name)
+   DRAIN ] FORCE ] IMMEDIATE ] NORMAL ] REMOUNT(RDWR]READ]SAMEMODE) ] RESET
+
+UNMOUNT FILESYSTEM('YCOS01.PRIV.ZFS')
+
+===================================================================
+
+unixl +
+  /usr/lpp/wbem/bin/cimcli ei IBMzOS_Incident -o xml
+unixenv +
+env_variable_start
+PATH=/bin:.:/usr/lpp/wbem/bin
+LIBPATH=/lib:/usr/lib:/usr/lpp/wbem/lib:.
+export LIBPATH
+env_variable_end
+        cimcli ei IBMzOS_OperatingSystem
+        cimcli ei IBMzOS_Incident
+        cimcli ei IBMzOS_Process
+        cimcli ei IBMzOS_OSProcess
+        cimcli ei IBMzOS_ComputerSystem
+        cimcli ei IBMzOS_BaseBoard
+        cimcli ei IBM_BaseBoard
+        cimcli ni
+        cimcli ei +
+IBMzOS_SFMAttributes
+IBMzOS_IncidentIndication
+        cimcli nc
+        cimcli ec
+        cimcli ei IBMzOS_Incident
+
+===================================================================
+
+#------------------------------------------------------
+# UDLIST Samples
+# display the path using UDLIST - 3.17
+udlist /u
+udlist /u/YCOS01
+udlist /u          +
+             /YCOS01 +
+       /DIR
+
+#------------------------------------------------------
+# UFDIR  Samples
+# find and display all directories within
+# first parm is path
+# second parm is directory name (also generic)
+ufdir  /u o*
+ufdir  /u/YCOS01 *u*
+# the directory name CANNOT be continued|||
+ufdir  /u/YCOS01 +
+       *I*
+
+#------------------------------------------------------
+# UFFIL  Samples
+# find and display all files within given
+# name within a given directoy tree
+# first parm is path
+# second parm is directory name (also generic)
+uffil  /u/YCOS01 +
+       *y*
+uffil  /u/YCOS01 +
+       *
+# the directory name CANNOT be continued|||
+uffil  /u          +
+       *C*
+
+===================================================================
+
+#------------------------------------------------------
+D OMVSÄä,SUMMARY]SüÜ
+        ,ACTIVATE=SERVICE
+        ,äASID]Aü=ALL
+        ,äASID]Aü=asid
+        ,äASID]Aü=DUBW
+        ,äCINET]CIü=All]TPname
+        ,äFILE]FÄ,äNAME]Nü=filesystemÜÄ,CAPS]CÜü
+              ,ä,EXCEPTION]Eü
+              ,ä,OWNER]Oü=systemname
+              ,ä,TYPE]Tü=type
+              ,ä,UID]Uü=äUSER]PRIV]uidü
+        ,äLIMITS]LÄ,PID=ProcessIdÜÄ,RESETÜü
+        ,äPIDü=processidÄ,BRLÜ
+        ,PIPESÄ,ALLÜ]Ä,RESETÜ]Ä,äUID]Uü=uidÜ
+        ,MFÄä=ALL]AüÜ
+        ,MF=äPURGE]PüÜ
+        ,äPFS]Pü
+        ,äOPTIONS]Oü
+        ,äSERü
+        ,äSOCKETS]SOü
+        ,äSTORAGE]STÄ,RESETÜü
+        ,U=userid
+        ,USERMOUNTS
+        ,äVSERVER]Vü
+        ,äWAITERS]W Ä,äAGE]Aü
+                      äLATCHES]Lü
+                      äMESSAGES]Mü
+                      äOTHER]Oü
+                      äSPECIAL]SüÜ
+
+#------------------------------------------------------
+# files
+sdsf d omvs,f
+# files caps
+sdsf d omvs,f,c
+# files only name
+sdsf d omvs,f,n=OMVS.YCOS.ROOT
+# files exceptions
+sdsf d omvs,f,e
+# files of type zfs
+sdsf d omvs,f,t=zfs
+#------------------------------------------------------
+# physical file systems
+sdsf d omvs,pfs
+#------------------------------------------------------
+# temp file systems
+# query
+sdsf F OMVS,PFS=TFS,Q
+# manual Grow
+sdsf F OMVS,PFS=TFS,grow filesystem
+# change default settings
+#   - BPXTF009E FILESYSTEM EXCEEDS threshold and increment
+sdsf F OMVS,PFS=TFS,FSFULL(thres,incr)
+#   - ea number of automatic grow
+sdsf F OMVS,PFS=TFS,EA cnt
+#   - em number of manual grow
+sdsf F OMVS,PFS=TFS,EM cnt
+#------------------------------------------------------
+# nonprivileged user mounts
+sdsf d omvs,usermounts
+#------------------------------------------------------
+# options
+sdsf d omvs,o
+#------------------------------------------------------
+# limits
+sdsf d omvs,l
+#------------------------------------------------------
+# limits - Resets the high-water mark
+sdsf d omvs,l,reset
+#------------------------------------------------------
+# process - PID
+sdsf d omvs,a=all
+# single pid - process
+sdsf d omvs,pid=1
+#------------------------------------------------------
+# Sockets
+sdsf d omvs,so
+
+===================================================================
+
+#------------------------------------------------------
+# TSO Commands
+
+# OGET - TSO copy USS file to MVS dataset
+OGET 'pathname'
+     mvs_data_set_name ] mvs_data_set_name(member_name)
+     BINARY ] TEXT
+     CONVERT(character_conversion_table ] YES ] NO)
+
+OGET '/u/YCOS01/myres.tx' 'YCOS01.USS.OUT'
+# ispf edit
+ispf edit dataset(uss.out)
+
+#OGETX - TSO copy USS files to MVS PDS/PDSE dataset
+OGETX hfs_directory ] hfs_file_name
+     mvs_pds ] mvs_pds(member_name)
+     ASIS                     _ not converted to §
+     BINARY ] TEXT
+     CONVERT(character_conversion_table ] YES ] NO)
+     LC                       conversion to uppercase
+     QUIET
+     SUFFIX(suffix)           remove .suffix from file name
+
+OGETX '/u/YCOS01' 'YCOS01.USS.PDSE' LC
+OGETX '/u/YCOS01' 'YCOS01.USS.PDSE' LC SUFFIX(tx)
+OGETX '/u/YCOS01' 'YCOS01.USS.PDSE' LC SUFFIX(src)
+# YCOS01.USS.PDSE have to be defined previously
+# ispf view
+ispf view dataset(uss.pdse)
+ispf SELECT PGM(ISRDSLST) PARM(DSL +
+     uss.pdse                      +
+     ) SUSPEND SCRNAME(DSLIST)
+
+# OPUT - TSO copy MVS dataset to USS file
+OPUT mvs_data_set_name ] mvs_data_set_name(member_name)
+     'pathname'
+     BINARY ] TEXT
+     CONVERT(character_conversion_table ] YES ] NO)
+
+OPUT USS.OUT '/u/YCOS01/myres_oput.tx'
+# edit - E line command + cursor on /
+/u/YCOS01/myres_oput.tx
+
+# OPUTX - TSO copy MVS PDS/PDSE Member(s) to USS file
+OPUTX mvs_pds ] mvs_pds(member_name)
+     hfs_directory ] hfs_file_name
+     ASIS                     _ not converted to §
+     BINARY ] TEXT
+     CONVERT(character_conversion_table ] YES ] NO)
+     LC                       conversion to uppercase
+     QUIET
+     SUFFIX(suffix)           remove .suffix from file name
+
+OPUTX USS.PDSE '/u/YCOS01/mydir'
+
+===================================================================
+
+# ISPF / Unix OBrowse, OView and OEdit USS Files
+OBROWSE/OVIEW/OEDIT
+     Udlist home directory
+
+OBROWSE/OVIEW/OEDIT Ä-r ##Ü pathname or 'pathname'
+     Browse path or file - relative (from home) or absolute
+     -r fixed record length for browse
+
+OEDIT /u/YCOS01/new.txt
+
+# only available if running under "TSO OMVS" (not telnet|)
+oedit /u/YCOS01/new.txt
+
+# ISPF Editor View mode
+oview /u/YCOS01/MYFILE
+
+# UDLIST home
+oview
+
+# View first and than second (third ) file|
+oview /u/YCOS01/MYFILE /u/YCOS01/MYFILEA
+
+Edit macro can use (as OEDIT) extra ISPF variables
+  HFSCWD - current work directory
+  HFSNAME - current file name
+
+===================================================================
+
+#------------------------------------------------------
+# tso user omvs
+# run listuser command to ask for OMVS details
+lu YCOS01  omvs noracf
+#
+# USER=YCOS01
+#
+# OMVS INFORMATION
+# ----------------
+# UID= 0000000000
+# HOME= /u/YCOS01
+# PROGRAM= /bin/sh
+# CPUTIMEMAX= NONE
+# ASSIZEMAX= NONE
+# FILEPROCMAX= NONE
+# PROCUSERMAX= NONE
+# THREADSMAX= NONE
+# MMAPAREAMAX= NONE
+
+
+#------------------------------------------------------
+# tso group omvs
+# run listgrp command to ask for OMVS details
+lg mygrp   omvs noracf
+
+===================================================================
+
+# zfs help
+unixl +
+  zfsadm help
+# aggrinfo        Obtain information on an attached aggregate
+# apropos         search by help text
+# attach          attach an aggregate
+# chaggr          change aggregate attribute
+# compress        Compress file system
+# config          dynamically reconfigure the zFS kernel
+# configquery     query configuration settings for the zFS kernel
+# convert         Convert a directory to version 5 format
+# decompress      Decompress file system
+# decrypt         Decrypt file system
+# define          create a VSAM linear dataset with SHAREOPTIONS(3,3)
+# delete          delete a filesystem
+# detach          detach an aggregate
+# encrypt         Encrypt file system
+# fileinfo        Obtain information on a file or directory
+# format          format an aggregate
+# fsinfo          Obtain file system information
+# grow            grow an aggregate
+# help            get help on commands
+# history         History for file system
+# level           display service level
+# lsaggr          list aggregates
+# lsfs            list filesystem information
+# lssys           list systems
+# query           query information for the zFS kernel
+# quiesce         quiesce an aggregate
+# salvage         salvage an aggregate
+# setauditfid     Set or reset an aggregate's auditfid
+# shrink          Shrink file system
+# unquiesce       unquiesce an aggregate
+
+# zfs query sysplex
+unixl +
+  zfsadm lssys
+# zfs query cache
+unixl +
+  zfsadm query -logcache
+
+# zfs query config
+unixl +
+  zfsadm configquery -all
+unixl +
+  zfsadm configquery -aggrgrow
+unixl +
+  zfsadm configquery -level
+
+# zfs show aggregates
+unixl +
+  zfsadm lsaggr
+unixl +
+  zfsadm lsfs -long
+unixl +
+  zfsadm aggrinfo -long
+unixl +
+  zfsadm aggrinfo YCOS01.NEW.ZFS -long
+
+# zfs compress aggregates
+unixl +
+  zfsadm compress YCOS01.NEW.ZFS
+# zfs Stop compress aggregates
+unixl +
+  zfsadm compress YCOS01.NEW.ZFS -cancel
+# zfs query compression
+unixl +
+  zfsadm query -compression
+
+# zfs decompress aggregates
+unixl +
+  zfsadm decompress YCOS01.NEW.ZFS
+
+# zfs shrink size
+unixl +
+  zfsadm shrink -aggregate aggr Ä-cancel ] -size ### Ä-noaiÜÜ
+unixl +
+  zfsadm shrink -aggregate YCOS01.new.zfs -size 400 -noai
+# size must be given in Kilobytes|
+# -noai = not actively increase
+
+# zfs change aggregate
+unixl +
+  zfsadm chaggr -aggregate -aggrfull... ] -aggrgrow... ] -ÄnoÜrwshare
+             Ä-trace... Ü Ä-levelÜ Ä-helpÜ
+
+# zfs salvage utility
+unixl +
+  zfsadm salvage Ä-verifyonly ] -cancelÜ
+             Ä-trace... Ü Ä-levelÜ Ä-helpÜ
+
+# zfs trace
+unixl +
+  zfsadm -trace filename
+#                  (USS file, seq, PDS or PDSE - VB133)
+
+# zfs sysplex high availability
+unix +
+zfsadm configquery -ha
+IOEZ00317I The value for configuration option -ha is OFF.
+
+unix +
+zfsadm config -ha ON
+IOEZ00300I Successfully set -ha to ON
+
+unix +
+zfsadm configquery -ha
+IOEZ00317I The value for configuration option -ha is ON.
+
+unix +
+zfsadm fsinfo -aggregate YCOS01.NEW.ZFS
+File System Name: YCOS01.NEW.ZFS
+
+   *** owner information ***
+   Owner:               YCOS            Converttov5:            OFF,n/a
+   Size:                2160K           Free 8K Blocks:         248
+   Free 1K Fragments:   7               Log File Size:          120K
+   Bitmap Size:         8K              Anode Table Size:       8K
+   File System Objects: 4               Version:                1.5
+   Overflow Pages:      0               Overflow HighWater:     0
+   Thrashing Objects:   0               Thrashing Resolution:   0
+   Token Revocations:   0               Revocation Wait Time:   0.000
+   Devno:               18              Space Monitoring:       0,0
+   Quiescing System:    n/a             Quiescing Job Name:     n/a
+   Quiescor ASID:       n/a             File System Grow:       ON,0
+   Status:              RW,NS,NE,NC
+   Audit Fid:           E8F1E6D6 D9D201C9 0000
+   Backups:             0               Backup File Space:      0K
+
+   File System Creation Time: Feb 10 08:42:50 2020
+   Time of Ownership:         Feb 10 08:42:50 2020
+   Statistics Reset Time:     Feb 10 08:42:50 2020
+   Quiesce Time:              n/a
+   Last Grow Time:            n/a
+
+   Connected Clients:   n/a
+
+
+Legend: RW=Read-write, NS=Mounted NORWSHARE, NE=Not encrypted
+        NC=Not compressed
+
+unix +
+zfsadm chaggr -aggregate YCOS01.NEW.ZFS -ha
+
+===================================================================
+
+# File System Information (also as MVS Modify/F command)
+# zfs file system information
+unixl +
+  zfsadm fsinfo Ä-aggregate aggr ] -path pth ] -allÜ
+                   Ä-basic ] -owner ] -full ] -resetÜ
+                   Ä-select criteria ] -exceptionsÜ
+                   Ä-sort name]requests]responseÜÄ-levelÜÄ-helpÜ
+
+unixl +
+  zfsadm fsinfo  -aggregate ycos01.zfs
+
+Select criteria:
+CE*  Had XCF communication failures between client systems and owning systems.
+DA*  Are marked damaged by the zFS salvager.
+DI*  Are disabled for reading and writing.
+GD*  Are disabled for dynamic grow.
+GF*  Had failed dynamic grow attempts.
+GR   Are currently being grown.
+IE*  Have had disk I/0 errors.
+L*   Have less than 1 MB of free space, which means that increased XCF traffic
+     is required for writing files.
+NS   Are mounted NORWSHARE.
+OV   Contain extended (v5) directories that are using overflow pages.
+Q*   Are currently quiesced.
+RO   Are mounted read-only.
+RQ   Had application activity.
+RW   Are mounted read/write.
+RS   Are mounted RWSHARE.
+SE*  Have returned ENOSPC errors to applications.
+TH   Have sysplex thrashing objects in them.
+V4   Are version 1.4.
+V5   Are version 1.5.
+V5D' Are disabled for conversion to version 1.5.
+WR   Had application write activity.
+  * = exceptions
+
+# zfs query
+sdsf F ZFS,QUERY,FILE
+sdsf F ZFS,QUERY,LEVEL
+sdsf F ZFS,QUERY,STORAGE,DETAILS
+
+# Terminate/Force a Process/Thread
+sdsf F BPXOINIT,TERM=pidÄ.tidÜ
+sdsf F BPXOINIT,FORCE=pidÄ.tidÜ
+
+===================================================================
+
+#------------------------------------------------------
+# compile assembler
+unix +
+as -o ywtoux.o ywtoux.asm
+
+# bind assembler
+unix +
+ld -S "//'sys1.csslib'" -o ywtoux ywtoux.o
+
+# run assembler
+unix +
+ywtoux please_give_me_this_data
+
+unix +
+ywtoux please_give_me_this_data and some more
+
+unix +
+YWTOUX please_give_me_this_data and some more
+
+===================================================================
+
+#------------------------------------------------------
+# compile cobol
+unix +
+/u/YCOS01/cob620/bin/.orig/cob2    +
+    -qLIST,MAP,DYNAM,RENT          +
+    -o ygpsux.o +
+    ygpsux.cbl
+
+# bind cobol
+unix +
+ld -S "//'sys1.csslib'" -b RENT -o ygpsux ygpsux.o
+
+alloc fi(sysout) sysout(a)
+
+alloc fi(sysout) +
+PATH('/u/YCOS01/ygpsux.sysout') +
+PATHOPTS(OWRONLY,OCREAT) +
+FILEDATA(TEXT) +
+PATHDISP(KEEP,KEEP) +
+PATHMODE(SIRWXU)
+
+free fi(sysout)
+
+# run cobol
+unix +
+ygpsux
+
+===================================================================
+
+#------------------------------------------------------
+# compile java
+
+# iconv convert from ger to us
+# http://de.wikipedia.org/
+#         wiki/Extended_Binary_Coded_Decimals_Interchange_Code
+unix +
+ iconv -f IBM-273 -t IBM-1047 /u/YCOS01/HelloYves.src     +
+                             >/u/YCOS01/HelloYves.java
+
+# Java compile
+unix +
+/usr/lpp/java/J8.0_64/bin/javac /u/YCOS01/HelloYves.java
+
+===================================================================
+
+#------------------------------------------------------
+# run tso commands from within USS
+unix /bin/tsocmd "listd 'YCOS01.YCOS.CNTL' members"
+unix /bin/tsocmd "listcat ent('YCOS01.YCOS.CNTL') all"
+unix /bin/tsocmd "listcat level(YCOS01.YCOS.USS.JCL) name"
+
+===================================================================
+
+# HFS/zFS migration
+BPXWMIGF
+  -source HFS]zFS
+  -target zFS
+  -mode rw]ro]asis
+  -parm zFSparm]-noparm
+  -swap]noswap
+  -srename HFSname]zFSname]-nosrename
+  -trename zFSname]-notrename
+  -wait min
+  -status min
+  -priority 1-9 (def 2)
+
+-query ÄHFS]zFSÜ
+-cancel HFS]zFS
+
+
+# callable from
+# TSO SYS1.SBPXEXEC
+# Unix /usr/sbin
+# System rexx SYS1.SAXREXEC
+
+
+MOUNT FILESYSTEM(file_system_name) MOUNTPOINT(pathname) TYPE(file_system_type)
+  MODE(RDWR]READ) PARM(parameter_string) TAG(NOTEXT]TEXT,ccsid)
+  SETUID]NOSETUID WAIT]NOWAIT SECURITY]NOSECURITY SYSNAME (sysname)
+  AUTOMOVE]AUTOMOVE(INCLUDE]EXCLUDE,sys1,sys2,...,sysn)] NOAUTOMOVE]UNMOUNT
+
+MOUNT FILESYSTEM('YCOS01.NEW.ZFS') MOUNTPOINT('/global/ymnt') TYPE(ZFS) +
+  MODE(RDWR)
+
+DEFINE CLUSTER (NAME('YCOS01.TEST.ZFS') +
+       ZFS                              +
+       CYLINDERS(3 3) )
+
+# copy file to other
+BPXWMIGF +
+-source YCOS01.NEW.ZFS +
+-target YCOS01.TEST.ZFS
+
+BPXWMIGF +
+-query
+
+BPXWMIGF +
+-cancel YCOS01.NEW.ZFS
+
+DELETE 'YCOS01.TEST.ZFS'
+
+# copy file to other, swap and rename|
+BPXWMIGF +
+-source YCOS01.NEW.ZFS +
+-target YCOS01.TEST.ZFS +
+-swap +
+-srename YCOS01.OLD.ZFS +
+-trename YCOS01.NEW.ZFS
+
+BPXWMIGF +
+-query
+

@@ -1,0 +1,20 @@
+/* Rexx by YCOS Yves Colliard Software - www.ycos.de                  */
+/*                                                                    */
+/*+------------------------------------------------------------------+*/
+/*| YCLMACRX     (c)  YCOS Yves Colliard Software                    |*/
+/*|                   2004-21                                        |*/
+/*|                   Mail yves.colliard§ycos.de                     |*/
+/*|                   Use at your own RISK|                          |*/
+/*+------------------------------------------------------------------+*/
+parse arg parm "DD=" ddname . ,
+             1 "CMD=" cmd .
+fls_rc = 0
+address flsexec "SYSCMD CMD("cmd") CMDMSG(CMDMSG.)"
+if rc > 0 then do
+    say "OMCFlash Error: " || FLSEXEC_MSG
+    fls_rc = 8
+  end
+  else do
+    address mvs "execio "cmdmsg.0" diskw "ddname" (stem cmdmsg."
+  end
+return fls_rc

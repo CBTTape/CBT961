@@ -1,0 +1,58 @@
+Summary of changes:
+-------------------
+
+Vers 2.24  20.12.2023 Yves Colliard
+           following members have been changed:
+           $$$CHNG
+           $$$HELP
+           Y$HC
+           YCLMACHG
+           YCLMACRX
+           YCLMACT
+           YCLMAHLP
+           YCLMACTB      ||||| very important |||||
+
+           following members have been updated - samples:
+           LMACJES2
+           LMACMVS
+           LMACUSS
+
+------------------------------------------------------------
+
+Vers 2.24  20.12.2023 Yves Colliard
+           Support EX multiline commands
+    ex4 13 TSO  HELP +
+    000014 LU
+    000015 SDSF +
+    000016 D T
+           or
+    exx 13 TSO  HELP +
+    000014 LU
+    exx 15 SDSF +
+    000016 D T
+
+           ISPF, UDLIST, UFDIR and UFFIL will return the results
+           as first - separated. All other functions will
+           return all responses within one display.
+
+           The table entry - YCLMACTB - for EX have to be
+           changed||||||||
+           See customization||
+
+------------------------------------------------------------
+
+Vers 2.24  20.12.2023 Yves Colliard
+           Support EX SDSF new parameter - T=##
+           some SDSF Commands - like ACTIVATE - needs a lot
+           of time to complete... using the T=## parameter
+           a wait time for catching the responses can be
+           specified within the EX SDSF command
+
+    ex 059 SDSF T=30 ROUTE SY1,ACTIVATE IODF=13,TEST
+
+------------------------------------------------------------
+
+Vers 2.24  20.12.2023 Yves Colliard
+           support of Flasher Tone Software for EX
+ex   FL D T
+     possible needed for customization of YCLMACFL|
